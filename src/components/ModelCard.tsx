@@ -294,6 +294,40 @@ export const ModelCard: React.FC<ModelCardProps> = ({
 
               {/* Source-specific Links */}
               <div className="pt-2 border-t border-white/5 space-y-2 text-zinc-400">
+                {model.webToolUrl && (
+                  <div className="flex items-center justify-between">
+                    <span className="flex items-center gap-1 text-purple-300 font-medium">
+                      <span>🎨</span>
+                      <span>Online Web Tool:</span>
+                    </span>
+                    <a
+                      href={model.webToolUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 font-mono text-purple-400 hover:underline"
+                    >
+                      <span>opan-bg.vercel.app</span>
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  </div>
+                )}
+                {model.apiUrl && (
+                  <div className="flex items-center justify-between">
+                    <span className="flex items-center gap-1 text-cyan-300 font-medium">
+                      <span>⚡</span>
+                      <span>Free API Docs:</span>
+                    </span>
+                    <a
+                      href={model.apiUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 font-mono text-cyan-400 hover:underline"
+                    >
+                      <span>opan-bg.vercel.app/api.html</span>
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  </div>
+                )}
                 {isHfModel ? (
                   <>
                     <div className="flex items-center justify-between">
@@ -325,7 +359,7 @@ export const ModelCard: React.FC<ModelCardProps> = ({
                       </a>
                     </div>
                   </>
-                ) : (
+                ) : !model.webToolUrl ? (
                   <>
                     <div className="flex items-center justify-between">
                       <span className="flex items-center gap-1 text-sky-300">
@@ -357,7 +391,7 @@ export const ModelCard: React.FC<ModelCardProps> = ({
                       </div>
                     )}
                   </>
-                )}
+                ) : null}
               </div>
             </div>
 
@@ -412,8 +446,37 @@ export const ModelCard: React.FC<ModelCardProps> = ({
           {isExpanded ? <ChevronUp className="h-3 w-3 text-zinc-400" /> : <ChevronDown className="h-3 w-3 text-zinc-400" />}
         </button>
 
-        {/* Source Link (Hugging Face Files & versions vs Ollama Model Details) */}
-        {isHfModel ? (
+        {/* Source Link (Web Tool vs Hugging Face Files & versions vs Ollama Model Details) */}
+        {model.webToolUrl ? (
+          <div className="flex items-center gap-2 flex-wrap">
+            <a
+              href={model.webToolUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              id={`btn-webtool-${model.id}`}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-purple-600/20 to-indigo-600/20 hover:from-purple-600/30 hover:to-indigo-600/30 border border-purple-500/40 px-3 py-2 text-xs font-bold text-purple-300 transition-all cursor-pointer shadow-sm hover:scale-[1.02]"
+              title="Open AI Background Remover Web Tool"
+            >
+              <span>🎨</span>
+              <span>Open Web Tool</span>
+              <ExternalLink className="h-3 w-3 opacity-70" />
+            </a>
+            {model.apiUrl && (
+              <a
+                href={model.apiUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                id={`btn-api-docs-${model.id}`}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 px-2.5 py-2 text-xs font-bold text-cyan-300 transition-all cursor-pointer shadow-sm"
+                title="Open Free Vision API Documentation"
+              >
+                <span>⚡</span>
+                <span>Free API</span>
+                <ExternalLink className="h-3 w-3 opacity-70" />
+              </a>
+            )}
+          </div>
+        ) : isHfModel ? (
           <a
             href={`https://huggingface.co/${hfCleanRepo}/tree/main`}
             target="_blank"

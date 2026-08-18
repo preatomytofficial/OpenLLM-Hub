@@ -13,8 +13,111 @@ export const HARDWARE_PRESETS: HardwarePreset[] = [
 
 export const MODELS_DATA: LLMModel[] = [
   // ----------------------------------------------------
-  // 1. 6 FEATURED TOOLS AT THE VERY TOP (isFeatured: true)
+  // 1. FEATURED & MY LLM TOOLS AT THE VERY TOP
   // ----------------------------------------------------
+  {
+    id: 'open-bg-remover',
+    name: 'OpenBG - AI Background Remover',
+    slug: 'open-bg',
+    tagline: 'High-Precision AI Background Remover Tool & Free Vision LLM API',
+    taglineBn: 'হাই-প্রিসিশন এআই ব্যাকগ্রাউন্ড রিমুভার টুল ও ফ্রি এআই ভিশন এপিআই',
+    description: 'State-of-the-art AI background remover tool and free LLM Vision API. Features sub-second high-resolution alpha matting, edge-preserving subject extraction, an interactive web application at https://opan-bg.vercel.app/, and a free developer API integration endpoint at https://opan-bg.vercel.app/api.html.',
+    descriptionBn: '১-ক্লিকে নির্ভুল ব্যাকগ্রাউন্ড রিমুভ করার আধুনিক এআই টুল (opan-bg.vercel.app) এবং ডেভেলপারদের জন্য উন্মুক্ত ফ্রি এপিআই (opan-bg.vercel.app/api.html)।',
+    creator: 'Preatom YT',
+    avatarIcon: 'Eye',
+    baseArchitecture: 'U-2-Net / RMBG Vision Core',
+    parameterSize: '1.4B (Vision Engine)',
+    paramNumber: 1.4,
+    category: 'vision',
+    modelScope: 'my_llm',
+    contextWindow: '128K',
+    license: 'Free API & Web Tool (Open Access)',
+    releaseDate: '2026-08-18',
+    downloadsCount: 312000,
+    likesCount: 24500,
+    rating: 4.98,
+    isFeatured: true,
+    isTrending: true,
+    isNew: true,
+    webToolUrl: 'https://opan-bg.vercel.app/',
+    apiUrl: 'https://opan-bg.vercel.app/api.html',
+    benchmarks: {
+      mmlu: 88.5,
+      codingHumanEval: 82.0,
+      mathGsm8k: 80.0,
+      banglaNlpScore: 90.0,
+      reasoningArc: 91.0,
+      tokensPerSec: 140
+    },
+    minVramGb: 0,
+    recommendedVramGb: 2.0,
+    minCpuRamGb: 4.0,
+    quantizations: [
+      {
+        format: 'ONNX Runtime',
+        size: 'Free Cloud API',
+        bytes: 1400000000,
+        filename: 'openbg-vision-api.json',
+        downloadUrl: 'https://opan-bg.vercel.app/api.html',
+        recommendedVram: 'Zero VRAM (Free Cloud REST API)',
+        recommendedFor: 'Instant web tool & automated REST API pipelines',
+        isPopular: true
+      },
+      {
+        format: 'GGUF Q4_K_M',
+        size: '1.1 GB',
+        bytes: 1181116006,
+        filename: 'openbg-remover-q4_k_m.gguf',
+        downloadUrl: 'https://opan-bg.vercel.app/api.html',
+        recommendedVram: '2 GB VRAM',
+        recommendedFor: 'Local offline background segmentation'
+      }
+    ],
+    ollamaCommand: 'curl -X POST "https://opan-bg.vercel.app/api.html" -F "image=@input.jpg"',
+    huggingFaceRepo: 'briaai/RMBG-2.0',
+    pythonSnippet: `# OpenBG Background Remover Free API Integration
+import requests
+
+# 1. Web Tool: https://opan-bg.vercel.app/
+# 2. Free API: https://opan-bg.vercel.app/api.html
+
+api_url = "https://opan-bg.vercel.app/api.html"
+
+# Send image file for instant background removal
+with open("sample.jpg", "rb") as img_file:
+    files = {"image": img_file}
+    response = requests.post(api_url, files=files)
+    
+if response.status_code == 200:
+    with open("sample_no_bg.png", "wb") as f:
+        f.write(response.content)
+    print("Background removed successfully!")
+`,
+    tags: ['My LLM', 'Background Remover', 'Vision', 'Free API', 'opan-bg.vercel.app', 'Image Tool', 'Preatom YT'],
+    features: [
+      'Interactive AI Background Remover Web App: https://opan-bg.vercel.app/',
+      'Free Developer API / Vision LLM Endpoint: https://opan-bg.vercel.app/api.html',
+      'Ultra-crisp edge detection for hair, semi-transparent objects, and complex products',
+      'Zero setup required — use online tool or call free REST API'
+    ],
+    featuresBn: [
+      'সরাসরি ব্যবহারযোগ্য ওয়েব টুল: https://opan-bg.vercel.app/',
+      'ফ্রি ডেভেলপার ভিশন এপিআই: https://opan-bg.vercel.app/api.html',
+      'চুল ও সূক্ষ্ম অবজেক্টের পারফেক্ট আলফা ম্যাটিং',
+      'কোনো সেটআপ ছাড়া ব্রাউজার ও পাইথন দিয়ে ব্যবহারযোগ্য'
+    ],
+    trainingTokens: 'High-Resolution Matting Datasets & Synthetic Masks',
+    samplePrompts: [
+      {
+        id: 'openbg-prompt-1',
+        title: 'Remove Background via Free API',
+        titleBn: 'ফ্রি এপিআই দিয়ে ব্যাকগ্রাউন্ড রিমুভ',
+        prompt: 'curl -X POST "https://opan-bg.vercel.app/api.html" -F "image=@product.jpg" -o product_cutout.png',
+        response: 'HTTP/2 200 OK\nContent-Type: image/png\nProcess Time: 340ms\nBackground removed with 4K alpha transparency mask.',
+        category: 'Vision'
+      }
+    ]
+  },
   {
     id: 'claude-code',
     name: 'Claude Code',

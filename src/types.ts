@@ -89,6 +89,8 @@ export interface LLMModel {
   features: string[];
   featuresBn?: string[];
   trainingTokens: string;
+  webToolUrl?: string;
+  apiUrl?: string;
 }
 
 export interface HardwarePreset {

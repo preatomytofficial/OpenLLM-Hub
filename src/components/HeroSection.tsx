@@ -25,6 +25,7 @@ interface HeroSectionProps {
   totalModels: number;
   publicCount: number;
   huggingFaceCount: number;
+  myLlmCount: number;
   categoryCounts: Record<ModelCategory, number>;
   totalDownloads: string;
   onExploreClick: () => void;
@@ -40,6 +41,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   totalModels,
   publicCount,
   huggingFaceCount,
+  myLlmCount,
   categoryCounts,
   totalDownloads,
   onExploreClick
@@ -131,7 +133,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </span>
             </button>
 
-            {/* Hugging Face LLM Scope Selector directly beside Public LLM */}
+            {/* Hugging Face LLM Scope Selector */}
             <button
               id="scope-huggingface-btn"
               onClick={() => {
@@ -148,6 +150,26 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <span>Hugging Face LLM</span>
               <span className="rounded-full bg-amber-950/60 px-2 py-0.5 text-xs text-amber-200 border border-amber-400/20">
                 {huggingFaceCount}
+              </span>
+            </button>
+
+            {/* My LLM Scope Selector */}
+            <button
+              id="scope-my-llm-btn"
+              onClick={() => {
+                setSelectedScope('my_llm');
+                onExploreClick();
+              }}
+              className={`flex items-center gap-2 rounded-full px-4 sm:px-5 py-2.5 text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                selectedScope === 'my_llm'
+                  ? 'bg-purple-600 text-white shadow-[0_0_20px_rgba(147,51,234,0.4)] scale-105'
+                  : 'bg-zinc-900/80 text-zinc-400 hover:text-purple-300 border border-white/10 hover:border-purple-500/30'
+              }`}
+            >
+              <span>🚀</span>
+              <span>My LLM</span>
+              <span className="rounded-full bg-purple-950/60 px-2 py-0.5 text-xs text-purple-200 border border-purple-400/20">
+                {myLlmCount}
               </span>
             </button>
           </div>

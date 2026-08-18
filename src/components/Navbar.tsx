@@ -16,6 +16,7 @@ interface NavbarProps {
   setSearchQuery: (query: string) => void;
   totalDownloads: string;
   onScrollToModels: () => void;
+  myLlmCount?: number;
   onOpenSocialModal: () => void;
 }
 
@@ -28,6 +29,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   setSearchQuery,
   totalDownloads,
   onScrollToModels,
+  myLlmCount,
   onOpenSocialModal
 }) => {
   return (
@@ -123,6 +125,23 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <span className="text-xs leading-none">🤗</span>
               <span>Hugging Face LLM</span>
+            </button>
+            <button
+              onClick={() => {
+                setSelectedScope('my_llm');
+                onScrollToModels();
+              }}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
+                selectedScope === 'my_llm' ? 'bg-purple-600 text-white shadow-sm' : 'text-zinc-400 hover:text-purple-300'
+              }`}
+            >
+              <span>🚀</span>
+              <span>My LLM</span>
+              {typeof myLlmCount === 'number' && (
+                <span className="ml-0.5 rounded-full bg-purple-950/80 px-1.5 py-0.2 text-[10px] text-purple-200">
+                  {myLlmCount}
+                </span>
+              )}
             </button>
           </div>
 

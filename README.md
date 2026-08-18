@@ -18,14 +18,6 @@
 ──────────────────────────────────────────────────────────────────────────────
 
 
-
-
-
-
-
-
-
-
 cat > /mnt/user-data/outputs/README.md << 'READMEEOF'
 # 🤖 OpenLLM Hub — Free Custom AI Models
 

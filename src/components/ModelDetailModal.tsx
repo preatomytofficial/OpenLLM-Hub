@@ -11,7 +11,9 @@ import {
   CheckCircle2,
   Zap,
   Sparkles,
-  BookOpen
+  BookOpen,
+  ExternalLink,
+  FolderGit2
 } from 'lucide-react';
 import { LLMModel, QuantizationOption } from '../types';
 
@@ -30,6 +32,9 @@ export const ModelDetailModal: React.FC<ModelDetailModalProps> = ({
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   if (!model) return null;
+
+  const isHfModel = model.category === 'huggingface-llm';
+  const hfCleanRepo = model.huggingFaceRepo ? model.huggingFaceRepo.replace(/\/tree\/.*$/, '') : '';
 
   const copySnippet = (code: string, id: string) => {
     navigator.clipboard.writeText(code);
@@ -197,49 +202,107 @@ export const ModelDetailModal: React.FC<ModelDetailModalProps> = ({
           {activeTab === 'integrate' && (
             <div className="space-y-5">
               
-              {/* Ollama Setup */}
-              <div className="rounded-2xl border border-white/10 bg-zinc-950/80 p-4 text-zinc-100 shadow-inner">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="flex items-center gap-1.5 text-xs font-bold text-cyan-400 font-mono">
-                    <Terminal className="h-4 w-4" /> Option 1: Run with Ollama (1-Line Command)
-                  </span>
-                  <button
-                    onClick={() => copySnippet(model.ollamaCommand, 'ollama')}
-                    className="flex items-center gap-1 text-xs text-zinc-300 hover:text-white bg-zinc-800 border border-white/10 px-2.5 py-1 rounded-lg cursor-pointer"
-                  >
-                    {copiedCode === 'ollama' ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
-                    <span>{copiedCode === 'ollama' ? 'Copied' : 'Copy'}</span>
-                  </button>
-                </div>
-                <pre className="font-mono text-xs text-emerald-400 overflow-x-auto p-3 bg-zinc-900/90 rounded-xl border border-white/5">
-                  {model.ollamaCommand}
-                </pre>
-              </div>
+              {/* If Hugging Face Model: Pure Hugging Face Link & CLI (NO Ollama) */}
+              {isHfModel ? (
+                <>
+                  {/* Hugging Face Official Repo Link */}
+                  <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 text-zinc-100 shadow-inner">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="flex items-center gap-1.5 text-xs font-bold text-amber-400">
+                        <span className="text-sm">🤗</span> Option 1: Hugging Face Model Repository & Direct Files
+                      </span>
+                      <a
+                        href={`https://huggingface.co/${hfCleanRepo}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-xs text-amber-300 hover:text-white bg-amber-500/20 border border-amber-500/30 px-2.5 py-1 rounded-lg cursor-pointer transition-colors"
+                      >
+                        <span>Open on Hugging Face</span>
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      </a>
+                    </div>
+                    <div className="p-3 bg-zinc-950/90 rounded-xl border border-white/5 flex items-center justify-between gap-3">
+                      <span className="font-mono text-xs text-amber-300 truncate">
+                        https://huggingface.co/{hfCleanRepo}
+                      </span>
+                      <button
+                        onClick={() => copySnippet(`https://huggingface.co/${hfCleanRepo}`, 'hf-link')}
+                        className="shrink-0 flex items-center gap-1 text-xs text-zinc-300 hover:text-white bg-zinc-800 border border-white/10 px-2.5 py-1 rounded-lg cursor-pointer"
+                      >
+                        {copiedCode === 'hf-link' ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+                        <span>{copiedCode === 'hf-link' ? 'Copied' : 'Copy Link'}</span>
+                      </button>
+                    </div>
+                  </div>
 
-              {/* Hugging Face CLI */}
-              <div className="rounded-2xl border border-white/10 bg-zinc-950/80 p-4 text-zinc-100 shadow-inner">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="flex items-center gap-1.5 text-xs font-bold text-blue-400 font-mono">
-                    <Terminal className="h-4 w-4" /> Option 2: Hugging Face CLI Download
-                  </span>
-                  <button
-                    onClick={() => copySnippet(`huggingface-cli download ${model.huggingFaceRepo}`, 'hf')}
-                    className="flex items-center gap-1 text-xs text-zinc-300 hover:text-white bg-zinc-800 border border-white/10 px-2.5 py-1 rounded-lg cursor-pointer"
-                  >
-                    {copiedCode === 'hf' ? <Check className="h-3.5 w-3.5 text-blue-400" /> : <Copy className="h-3.5 w-3.5" />}
-                    <span>{copiedCode === 'hf' ? 'Copied' : 'Copy'}</span>
-                  </button>
-                </div>
-                <pre className="font-mono text-xs text-zinc-200 overflow-x-auto p-3 bg-zinc-900/90 rounded-xl border border-white/5">
-                  huggingface-cli download {model.huggingFaceRepo}
-                </pre>
-              </div>
+                  {/* Hugging Face CLI */}
+                  <div className="rounded-2xl border border-white/10 bg-zinc-950/80 p-4 text-zinc-100 shadow-inner">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="flex items-center gap-1.5 text-xs font-bold text-blue-400 font-mono">
+                        <Terminal className="h-4 w-4" /> Option 2: Hugging Face CLI Download
+                      </span>
+                      <button
+                        onClick={() => copySnippet(`huggingface-cli download ${model.huggingFaceRepo}`, 'hf')}
+                        className="flex items-center gap-1 text-xs text-zinc-300 hover:text-white bg-zinc-800 border border-white/10 px-2.5 py-1 rounded-lg cursor-pointer"
+                      >
+                        {copiedCode === 'hf' ? <Check className="h-3.5 w-3.5 text-blue-400" /> : <Copy className="h-3.5 w-3.5" />}
+                        <span>{copiedCode === 'hf' ? 'Copied' : 'Copy'}</span>
+                      </button>
+                    </div>
+                    <pre className="font-mono text-xs text-zinc-200 overflow-x-auto p-3 bg-zinc-900/90 rounded-xl border border-white/5">
+                      huggingface-cli download {model.huggingFaceRepo}
+                    </pre>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Ollama Setup for non-HF models */}
+                  <div className="rounded-2xl border border-white/10 bg-zinc-950/80 p-4 text-zinc-100 shadow-inner">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="flex items-center gap-1.5 text-xs font-bold text-cyan-400 font-mono">
+                        <Terminal className="h-4 w-4" /> Option 1: Run with Ollama (1-Line Command)
+                      </span>
+                      <button
+                        onClick={() => copySnippet(model.ollamaCommand, 'ollama')}
+                        className="flex items-center gap-1 text-xs text-zinc-300 hover:text-white bg-zinc-800 border border-white/10 px-2.5 py-1 rounded-lg cursor-pointer"
+                      >
+                        {copiedCode === 'ollama' ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+                        <span>{copiedCode === 'ollama' ? 'Copied' : 'Copy'}</span>
+                      </button>
+                    </div>
+                    <pre className="font-mono text-xs text-emerald-400 overflow-x-auto p-3 bg-zinc-900/90 rounded-xl border border-white/5">
+                      {model.ollamaCommand}
+                    </pre>
+                  </div>
+
+                  {/* Hugging Face CLI */}
+                  {model.huggingFaceRepo && (
+                    <div className="rounded-2xl border border-white/10 bg-zinc-950/80 p-4 text-zinc-100 shadow-inner">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="flex items-center gap-1.5 text-xs font-bold text-blue-400 font-mono">
+                          <Terminal className="h-4 w-4" /> Option 2: Hugging Face CLI Download
+                        </span>
+                        <button
+                          onClick={() => copySnippet(`huggingface-cli download ${model.huggingFaceRepo}`, 'hf')}
+                          className="flex items-center gap-1 text-xs text-zinc-300 hover:text-white bg-zinc-800 border border-white/10 px-2.5 py-1 rounded-lg cursor-pointer"
+                        >
+                          {copiedCode === 'hf' ? <Check className="h-3.5 w-3.5 text-blue-400" /> : <Copy className="h-3.5 w-3.5" />}
+                          <span>{copiedCode === 'hf' ? 'Copied' : 'Copy'}</span>
+                        </button>
+                      </div>
+                      <pre className="font-mono text-xs text-zinc-200 overflow-x-auto p-3 bg-zinc-900/90 rounded-xl border border-white/5">
+                        huggingface-cli download {model.huggingFaceRepo}
+                      </pre>
+                    </div>
+                  )}
+                </>
+              )}
 
               {/* Python Code Snippet */}
               <div className="rounded-2xl border border-white/10 bg-zinc-950/80 p-4 text-zinc-100 shadow-inner">
                 <div className="flex items-center justify-between mb-2">
                   <span className="flex items-center gap-1.5 text-xs font-bold text-amber-400 font-mono">
-                    <FileCode2 className="h-4 w-4" /> Option 3: Python (Hugging Face Transformers)
+                    <FileCode2 className="h-4 w-4" /> Option {isHfModel ? '3' : '3'}: Python Integration
                   </span>
                   <button
                     onClick={() => copySnippet(model.pythonSnippet, 'python')}

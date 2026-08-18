@@ -37,6 +37,7 @@ export const ModelCard: React.FC<ModelCardProps> = ({
   onOpenSocialModal
 }) => {
   const [copiedOllama, setCopiedOllama] = useState(false);
+  const [copiedHfLink, setCopiedHfLink] = useState(false);
   const [showQuantDropdown, setShowQuantDropdown] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -52,6 +53,13 @@ export const ModelCard: React.FC<ModelCardProps> = ({
     navigator.clipboard.writeText(model.ollamaCommand);
     setCopiedOllama(true);
     setTimeout(() => setCopiedOllama(false), 2000);
+  };
+
+  const copyHfLink = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(`https://huggingface.co/${hfCleanRepo}`);
+    setCopiedHfLink(true);
+    setTimeout(() => setCopiedHfLink(false), 2000);
   };
 
   const popularQuant = model.quantizations.find(q => q.isPopular) || model.quantizations[0];
@@ -158,33 +166,78 @@ export const ModelCard: React.FC<ModelCardProps> = ({
           </span>
         </div>
 
-        {/* Ollama One-Click CLI Copy Pill */}
-        <div className="mt-4 rounded-xl border border-white/10 bg-zinc-950/90 p-2.5 text-zinc-100 shadow-inner">
-          <div className="flex items-center justify-between text-[11px] text-zinc-400 mb-1">
-            <span className="flex items-center gap-1 font-mono text-cyan-400">
-              <Terminal className="h-3 w-3" /> {model.ollamaCommand.startsWith('ollama launch') ? 'Ollama CLI Launch' : 'Ollama 1-Line Run'}
-            </span>
-            <button
-              onClick={copyOllama}
-              className="flex items-center gap-1 text-[10px] font-semibold text-zinc-400 hover:text-white transition-colors cursor-pointer"
-            >
-              {copiedOllama ? (
-                <>
-                  <Check className="h-3 w-3 text-emerald-400" />
-                  <span className="text-emerald-400">Copied!</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="h-3 w-3" />
-                  <span>Copy Command</span>
-                </>
-              )}
-            </button>
+        {/* Source Action Box: Hugging Face Link ONLY (No Ollama) for HF models, Ollama CLI for others */}
+        {isHfModel ? (
+          <div className="mt-4 rounded-xl border border-amber-500/25 bg-amber-500/5 p-2.5 text-zinc-100 shadow-inner">
+            <div className="flex items-center justify-between text-[11px] text-amber-300 mb-1">
+              <span className="flex items-center gap-1.5 font-medium text-amber-400">
+                <span className="text-xs">🤗</span> Hugging Face Repository
+              </span>
+              <button
+                onClick={copyHfLink}
+                className="flex items-center gap-1 text-[10px] font-semibold text-amber-300/80 hover:text-amber-200 transition-colors cursor-pointer"
+              >
+                {copiedHfLink ? (
+                  <>
+                    <Check className="h-3 w-3 text-emerald-400" />
+                    <span className="text-emerald-400">Copied Link!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-3 w-3" />
+                    <span>Copy Link</span>
+                  </>
+                )}
+              </button>
+            </div>
+            <div className="flex items-center justify-between gap-2 bg-zinc-950/80 rounded-lg p-2 border border-white/5">
+              <a
+                href={`https://huggingface.co/${hfCleanRepo}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-xs text-amber-300 hover:text-amber-200 hover:underline truncate"
+              >
+                huggingface.co/{hfCleanRepo}
+              </a>
+              <a
+                href={`https://huggingface.co/${hfCleanRepo}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shrink-0 inline-flex items-center gap-1 text-[11px] font-bold text-amber-400 hover:text-amber-300 bg-amber-500/10 px-2 py-1 rounded border border-amber-500/20"
+              >
+                <span>Visit Repo</span>
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            </div>
           </div>
-          <div className="font-mono text-xs text-zinc-200 select-all overflow-x-auto whitespace-nowrap">
-            {model.ollamaCommand}
+        ) : (
+          <div className="mt-4 rounded-xl border border-white/10 bg-zinc-950/90 p-2.5 text-zinc-100 shadow-inner">
+            <div className="flex items-center justify-between text-[11px] text-zinc-400 mb-1">
+              <span className="flex items-center gap-1 font-mono text-cyan-400">
+                <Terminal className="h-3 w-3" /> {model.ollamaCommand.startsWith('ollama launch') ? 'Ollama CLI Launch' : 'Ollama 1-Line Run'}
+              </span>
+              <button
+                onClick={copyOllama}
+                className="flex items-center gap-1 text-[10px] font-semibold text-zinc-400 hover:text-white transition-colors cursor-pointer"
+              >
+                {copiedOllama ? (
+                  <>
+                    <Check className="h-3 w-3 text-emerald-400" />
+                    <span className="text-emerald-400">Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-3 w-3" />
+                    <span>Copy Command</span>
+                  </>
+                )}
+              </button>
+            </div>
+            <div className="font-mono text-xs text-zinc-200 select-all overflow-x-auto whitespace-nowrap">
+              {model.ollamaCommand}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Inline Expandable Specs Tray */}
         {isExpanded && (

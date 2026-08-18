@@ -18,8 +18,8 @@
 ──────────────────────────────────────────────────────────────────────────────
 
 
-cat > /mnt/user-data/outputs/README.md << 'READMEEOF'
-# 🤖 OpenLLM Hub — Free Custom AI Models
+
+
 
 <p align="center">
   <img src="https://img.shields.io/badge/Open-Source-orange?style=for-the-badge&logo=github" />

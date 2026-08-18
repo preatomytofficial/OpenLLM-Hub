@@ -1,10 +1,10 @@
 ```text
- ██████╗ ██████╗ ███████╗███╗   ██╗  ██╗     ██╗     ███╗   ███╗
-██╔═══██╗██╔══██╗██╔════╝████╗  ██║  ██║     ██║     ████╗ ████║
-██║   ██║██████╔╝█████╗  ██╔██╗ ██║  ██║     ██║     ██╔████╔██║
-██║   ██║██╔═══╝ ██╔══╝  ██║╚██╗██║  ██║     ██║     ██║╚██╔╝██║
-╚██████╔╝██║     ███████╗██║ ╚████║  ███████╗███████╗██║ ╚═╝ ██║
- ╚═════╝ ╚═╝     ╚══════╝╚═╝  ╚═══╝  ╚══════╝╚══════╝╚═╝     ╚═╝
+ ██████╗ ██████╗ ███████╗███╗   ██╗██╗     ██╗     ███╗   ███╗
+██╔═══██╗██╔══██╗██╔════╝████╗  ██║██║     ██║     ████╗ ████║
+██║   ██║██████╔╝█████╗  ██╔██╗ ██║██║     ██║     ██╔████╔██║
+██║   ██║██╔═══╝ ██╔══╝  ██║╚██╗██║██║     ██║     ██║╚██╔╝██║
+╚██████╔╝██║     ███████╗██║ ╚████║███████╗███████╗██║ ╚═╝ ██║
+ ╚═════╝ ╚═╝     ╚══════╝╚═╝  ╚═══╝╚══════╝╚══════╝╚═╝     ╚═╝
 
 ██╗  ██╗██╗   ██╗██████╗
 ██║  ██║██║   ██║██╔══██╗
@@ -17,9 +17,7 @@
 ⚡ OPENLLM HUB • OPEN-SOURCE AI • LLM DISCOVERY
 ──────────────────────────────────────────────────────────────────────────────
 
-
-
-
+```
 
 <p align="center">
   <img src="https://img.shields.io/badge/Open-Source-orange?style=for-the-badge&logo=github" />
@@ -83,76 +81,6 @@ Whether you're a researcher, developer, or AI enthusiast — OpenLLM Hub gives y
 | 📱 **Edge Devices** | Lightweight models for low-RAM and mobile devices |
 
 ---
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Open-Source-orange?style=for-the-badge&logo=github" />
-  <img src="https://img.shields.io/badge/GGUF-Supported-blue?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Safetensors-Supported-purple?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Ollama-Supported-black?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/100%25-Free-green?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/License-MIT-red?style=for-the-badge" />
-</p>
-
-<p align="center">
-  <b>All-in-one open-source LLM hub to explore, test, benchmark,<br>
-  and download custom AI models for free.</b>
-</p>
-
-<p align="center">
-  <a href="https://openllm-hub.vercel.app/"><b>🌐 Live Demo → openllm-hub.vercel.app</b></a>
-</p>
-
----
-
-## ✨ What is OpenLLM Hub?
-
-**OpenLLM Hub** is a free, open-source platform to explore, test, benchmark, and download custom fine-tuned AI language models. It supports multiple model formats including **GGUF**, **Safetensors**, and **Ollama** — all available for free download.
-
-Whether you're a researcher, developer, or AI enthusiast — OpenLLM Hub gives you access to custom fine-tuned LLMs optimized for Bengali NLP, Coding, Reasoning, and Edge devices.
-
----
-
-## 🚀 Features
-
-- 🔍 **Explore Models** — Browse a curated collection of custom fine-tuned LLMs
-- 🧪 **Test Models** — Try out models directly before downloading
-- 📊 **Benchmark** — Compare model performance side by side
-- 📥 **Free Downloads** — Download models in GGUF, Safetensors, and Ollama formats
-- 🌏 **Bengali NLP** — Custom models fine-tuned for Bengali language processing
-- 💻 **Coding Models** — Specialized models for code generation and completion
-- 🧠 **Reasoning Models** — Advanced reasoning and problem-solving models
-- 📱 **Edge Device Models** — Lightweight models optimized for low-resource devices
-- 💰 **100% Free** — No subscription, no signup required
-
----
-
-## 📦 Supported Model Formats
-
-| Format | Description | Best For |
-|--------|-------------|----------|
-| 🔷 **GGUF** | Optimized quantized format | Running locally with llama.cpp |
-| 🟣 **Safetensors** | Safe, fast tensor format | Python/HuggingFace projects |
-| 🦙 **Ollama** | Ready-to-run Ollama format | Easy local deployment |
-
----
-
-## 🧠 Model Categories
-
-| Category | Description |
-|----------|-------------|
-| 🌏 **Bengali NLP** | Fine-tuned for Bengali language understanding and generation |
-| 💻 **Coding** | Optimized for code generation, completion, and debugging |
-| 🧠 **Reasoning** | Advanced logical reasoning and problem solving |
-| 📱 **Edge Devices** | Lightweight models for low-RAM and mobile devices |
-
----
-
-## 🦙 How to Use Downloaded Models
-
-### With Ollama
-```bash
-# Pull and run directly
-ollama run <model-name>
 
 ## 🦙 How to Use Downloaded Models
 
@@ -271,76 +199,6 @@ This project is licensed under the **MIT License** — free to use, share, and m
 ## 👨‍💻 Made by
 
 **Preatom YT** — [@preatomytofficial](https://github.com/preatomytofficial)
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Open-Source-orange?style=for-the-badge&logo=github" />
-  <img src="https://img.shields.io/badge/GGUF-Supported-blue?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Safetensors-Supported-purple?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Ollama-Supported-black?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/100%25-Free-green?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/License-MIT-red?style=for-the-badge" />
-</p>
-
-<p align="center">
-  <b>All-in-one open-source LLM hub to explore, test, benchmark,<br>
-  and download custom AI models for free.</b>
-</p>
-
-<p align="center">
-  <a href="https://openllm-hub.vercel.app/"><b>🌐 Live Demo → openllm-hub.vercel.app</b></a>
-</p>
-
----
-
-## ✨ What is OpenLLM Hub?
-
-**OpenLLM Hub** is a free, open-source platform to explore, test, benchmark, and download custom fine-tuned AI language models. It supports multiple model formats including **GGUF**, **Safetensors**, and **Ollama** — all available for free download.
-
-Whether you're a researcher, developer, or AI enthusiast — OpenLLM Hub gives you access to custom fine-tuned LLMs optimized for Bengali NLP, Coding, Reasoning, and Edge devices.
-
----
-
-## 🚀 Features
-
-- 🔍 **Explore Models** — Browse a curated collection of custom fine-tuned LLMs
-- 🧪 **Test Models** — Try out models directly before downloading
-- 📊 **Benchmark** — Compare model performance side by side
-- 📥 **Free Downloads** — Download models in GGUF, Safetensors, and Ollama formats
-- 🌏 **Bengali NLP** — Custom models fine-tuned for Bengali language processing
-- 💻 **Coding Models** — Specialized models for code generation and completion
-- 🧠 **Reasoning Models** — Advanced reasoning and problem-solving models
-- 📱 **Edge Device Models** — Lightweight models optimized for low-resource devices
-- 💰 **100% Free** — No subscription, no signup required
-
----
-
-## 📦 Supported Model Formats
-
-| Format | Description | Best For |
-|--------|-------------|----------|
-| 🔷 **GGUF** | Optimized quantized format | Running locally with llama.cpp |
-| 🟣 **Safetensors** | Safe, fast tensor format | Python/HuggingFace projects |
-| 🦙 **Ollama** | Ready-to-run Ollama format | Easy local deployment |
-
----
-
-## 🧠 Model Categories
-
-| Category | Description |
-|----------|-------------|
-| 🌏 **Bengali NLP** | Fine-tuned for Bengali language understanding and generation |
-| 💻 **Coding** | Optimized for code generation, completion, and debugging |
-| 🧠 **Reasoning** | Advanced logical reasoning and problem solving |
-| 📱 **Edge Devices** | Lightweight models for low-RAM and mobile devices |
-
----
-
-## 🦙 How to Use Downloaded Models
-
-### With Ollama
-```bash
-# Pull and run directly
-ollama run <model-name>
 
 > ⭐ If you like this project, please give it a **star** on GitHub!
 READMEEOF

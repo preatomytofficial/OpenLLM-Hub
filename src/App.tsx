@@ -66,7 +66,11 @@ export default function App() {
 
   // Calculate scope counts
   const publicCount = useMemo(() => {
-    return allAvailableModels.filter(m => m.modelScope === 'public').length;
+    return allAvailableModels.filter(m => m.modelScope === 'public' && m.category !== 'huggingface-llm').length;
+  }, [allAvailableModels]);
+
+  const huggingFaceCount = useMemo(() => {
+    return allAvailableModels.filter(m => m.category === 'huggingface-llm').length;
   }, [allAvailableModels]);
 
   const myLlmCount = useMemo(() => {
@@ -77,7 +81,10 @@ export default function App() {
   const categoryCounts = useMemo(() => {
     const scopeFiltered = allAvailableModels.filter(m => {
       if (selectedScope === 'all') return true;
-      return m.modelScope === selectedScope;
+      if (selectedScope === 'public') return m.modelScope === 'public' && m.category !== 'huggingface-llm';
+      if (selectedScope === 'huggingface') return m.category === 'huggingface-llm';
+      if (selectedScope === 'my_llm') return m.modelScope === 'my_llm';
+      return true;
     });
 
     const counts: Record<ModelCategory, number> = {
@@ -104,8 +111,14 @@ export default function App() {
   // Filter and sort models
   const filteredModels = useMemo(() => {
     return allAvailableModels.filter((model) => {
-      // Scope filter (Public LLM vs My LLM)
-      if (selectedScope !== 'all' && model.modelScope !== selectedScope) {
+      // Scope filter (Public LLM vs Hugging Face LLM vs My LLM)
+      if (selectedScope === 'public' && (model.modelScope !== 'public' || model.category === 'huggingface-llm')) {
+        return false;
+      }
+      if (selectedScope === 'huggingface' && model.category !== 'huggingface-llm') {
+        return false;
+      }
+      if (selectedScope === 'my_llm' && model.modelScope !== 'my_llm') {
         return false;
       }
 
@@ -188,6 +201,7 @@ export default function App() {
         setSearchQuery={setSearchQuery}
         totalModels={allAvailableModels.length}
         publicCount={publicCount}
+        huggingFaceCount={huggingFaceCount}
         myLlmCount={myLlmCount}
         categoryCounts={categoryCounts}
         totalDownloads={TOTAL_STATS.totalDownloads}
@@ -213,12 +227,13 @@ export default function App() {
               </div>
               <p className="mt-1 text-xs text-zinc-400">
                 {selectedScope === 'public' && 'Showing Public Foundation Models from Meta, DeepSeek, Google DeepMind, Microsoft & Qwen.'}
+                {selectedScope === 'huggingface' && 'Showing Trending Hugging Face GGUF models with direct hub repositories & Files and versions links.'}
                 {selectedScope === 'my_llm' && 'Showing Custom Fine-Tuned Models specialized for Bengali NLP, Coding, Edge reasoning, and custom domains.'}
-                {selectedScope === 'all' && 'Browse all Public Open-Weights and Custom Fine-Tuned models in one unified catalog.'}
+                {selectedScope === 'all' && 'Browse all Public Open-Weights, Hugging Face, and Custom Fine-Tuned models in one unified catalog.'}
               </p>
             </div>
 
-            {/* Scope Toggle Tabs (Public LLM vs My LLM) */}
+            {/* Scope Toggle Tabs (Public LLM vs Hugging Face LLM vs My LLM) */}
             <div className="flex items-center gap-2 flex-wrap">
               <div className="flex items-center rounded-xl bg-zinc-950 p-1 border border-white/10">
                 <button
@@ -250,6 +265,22 @@ export default function App() {
                   <span>Public LLM</span>
                   <span className="rounded-full bg-sky-950/60 px-1.5 py-0.2 text-[10px] text-sky-200">
                     {publicCount}
+                  </span>
+                </button>
+
+                <button
+                  id="tab-scope-huggingface"
+                  onClick={() => setSelectedScope('huggingface')}
+                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    selectedScope === 'huggingface'
+                      ? 'bg-amber-600 text-white shadow-[0_0_12px_rgba(217,119,6,0.4)]'
+                      : 'text-zinc-400 hover:text-amber-300'
+                  }`}
+                >
+                  <span className="text-xs leading-none">🤗</span>
+                  <span>Hugging Face LLM</span>
+                  <span className="rounded-full bg-amber-950/60 px-1.5 py-0.2 text-[10px] text-amber-200">
+                    {huggingFaceCount}
                   </span>
                 </button>
 

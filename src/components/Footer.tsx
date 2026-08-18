@@ -5,6 +5,7 @@ import {
   ExternalLink,
   Share2
 } from 'lucide-react';
+import { BrandLogo } from './BrandLogo';
 
 interface FooterProps {
   onScrollTo: (id: string) => void;
@@ -21,14 +22,7 @@ export const Footer: React.FC<FooterProps> = ({ onScrollTo, onOpenSocialModal })
           {/* Col 1: Brand & Creator */}
           <div className="md:col-span-2 space-y-3">
             <div className="flex items-center gap-2.5">
-              <div className="relative flex h-9 w-9 overflow-hidden items-center justify-center rounded-xl border border-blue-500/30 bg-zinc-900 shadow-[0_0_15px_rgba(59,130,246,0.3)]">
-                <img 
-                  src="/favicon.png" 
-                  alt="OpenLLM Hub Logo" 
-                  className="h-full w-full object-cover"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
+              <BrandLogo size="md" />
               <span className="font-bold text-white text-base">OpenLLM Hub</span>
               <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-bold text-emerald-300 border border-emerald-500/20">
                 100% Free Forever

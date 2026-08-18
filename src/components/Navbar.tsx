@@ -1,17 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
   Sparkles, 
-  Download, 
-  Terminal, 
-  Check, 
-  Copy, 
   Search,
   Globe2,
-  Rocket,
-  Plus
+  Rocket
 } from 'lucide-react';
-import { MODELS_DATA } from '../data/models';
 import { ModelScope } from '../types';
+import { BrandLogo } from './BrandLogo';
 
 interface NavbarProps {
   activeSection: string;
@@ -38,17 +33,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenAddModelModal,
   onOpenSocialModal
 }) => {
-  const [copiedBatch, setCopiedBatch] = useState(false);
-
-  const copyAllOllama = () => {
-    const commands = MODELS_DATA.map(m => m.ollamaCommand).join('\n');
-    navigator.clipboard.writeText(commands);
-    setCopiedBatch(true);
-    setTimeout(() => setCopiedBatch(false), 2200);
-  };
-
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-white/5 bg-black/60 backdrop-blur-xl transition-all">
+    <header className="sticky top-0 z-40 w-full border-b border-white/5 bg-black/70 backdrop-blur-xl transition-all">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         
         {/* Brand Logo & Name */}
@@ -61,14 +47,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="flex items-center gap-2.5 text-left group cursor-pointer"
             id="nav-brand-btn"
           >
-            <div className="relative flex h-10 w-10 overflow-hidden items-center justify-center rounded-xl border border-blue-500/30 bg-zinc-900 shadow-[0_0_15px_rgba(59,130,246,0.4)] transition-transform group-hover:scale-105">
-              <img 
-                src="/favicon.png" 
-                alt="OpenLLM Hub Logo" 
-                className="h-full w-full object-cover"
-                referrerPolicy="no-referrer"
-              />
-            </div>
+            <BrandLogo size="md" />
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-zinc-200 to-zinc-400 text-base sm:text-lg tracking-tight">
@@ -79,7 +58,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </span>
               </div>
               <p className="text-[11px] text-zinc-400 hidden sm:block">
-                Public & Custom AI Models Repository
+                Public & Hugging Face AI Models
               </p>
             </div>
           </button>
@@ -94,7 +73,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               id="nav-search-input"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search models (Llama 3.3, DeepSeek-R1, BanglaLlama, Qwen)..."
+              placeholder="Search models (Llama 3.3, DeepSeek-R1, Qwen, GGUF)..."
               className="w-full rounded-full border border-white/10 bg-zinc-900/60 py-1.5 pl-9 pr-3 text-xs sm:text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-blue-500/50 focus:bg-zinc-900/90 focus:outline-none transition-all shadow-inner backdrop-blur-md"
             />
             {searchQuery && (
@@ -109,7 +88,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Navigation Items & Scope Switcher */}
-        <nav className="flex items-center gap-2">
+        <nav className="flex items-center gap-2.5">
           
           {/* Quick Scope Switcher */}
           <div className="hidden lg:flex items-center rounded-xl bg-zinc-900/80 p-1 border border-white/10 text-xs">
@@ -138,6 +117,18 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
             <button
               onClick={() => {
+                setSelectedScope('huggingface');
+                onScrollToModels();
+              }}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
+                selectedScope === 'huggingface' ? 'bg-amber-600 text-white' : 'text-zinc-400 hover:text-amber-300'
+              }`}
+            >
+              <span className="text-xs leading-none">🤗</span>
+              <span>Hugging Face LLM</span>
+            </button>
+            <button
+              onClick={() => {
                 setSelectedScope('my_llm');
                 onScrollToModels();
               }}
@@ -150,45 +141,15 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           </div>
 
-          {/* Add Custom Model Button */}
-          <button
-            onClick={onOpenAddModelModal}
-            className="hidden sm:flex items-center gap-1 rounded-xl bg-purple-600/20 border border-purple-500/30 hover:bg-purple-600/30 text-purple-300 px-3 py-1.5 text-xs font-semibold transition-all cursor-pointer"
-            title="Register your custom fine-tuned model"
-          >
-            <Plus className="h-3.5 w-3.5" />
-            <span>+ Add My LLM</span>
-          </button>
-
           {/* Creator Profile Button */}
           <button
             id="nav-creator-social-btn"
             onClick={onOpenSocialModal}
-            className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-blue-600/20 to-indigo-600/20 border border-blue-500/30 hover:border-blue-400/50 text-blue-300 hover:text-white px-3 py-1.5 text-xs font-semibold transition-all cursor-pointer shadow-sm"
-            title="Creator: Preatom YT (Social Media Links)"
+            className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-red-600/20 to-rose-600/20 border border-red-500/30 hover:border-red-400/50 text-red-300 hover:text-white px-3 py-1.5 text-xs font-semibold transition-all cursor-pointer shadow-sm"
+            title="Creator: Preatom YT (YouTube & Profile Links)"
           >
-            <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="flex h-2 w-2 rounded-full bg-red-500 animate-pulse" />
             <span>Preatom YT</span>
-          </button>
-
-          {/* Copy All Ollama Commands Quick Action */}
-          <button
-            id="nav-copy-all-btn"
-            onClick={copyAllOllama}
-            className="flex items-center gap-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-1.5 text-xs sm:text-sm font-bold shadow-[0_0_15px_rgba(37,99,235,0.3)] transition-all cursor-pointer"
-          >
-            {copiedBatch ? (
-              <>
-                <Check className="h-3.5 w-3.5 text-emerald-300" />
-                <span className="text-emerald-200">Commands Copied!</span>
-              </>
-            ) : (
-              <>
-                <Terminal className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Copy All Ollama</span>
-                <span className="sm:hidden">Ollama</span>
-              </>
-            )}
           </button>
         </nav>
 

@@ -19,9 +19,11 @@ import {
   ExternalLink,
   Zap,
   Gauge,
-  FolderGit2
+  FolderGit2,
+  Globe2
 } from 'lucide-react';
 import { LLMModel, QuantizationOption } from '../types';
+import { OrganizationLogo } from './OrganizationLogo';
 
 interface ModelCardProps {
   model: LLMModel;
@@ -38,19 +40,12 @@ export const ModelCard: React.FC<ModelCardProps> = ({
   const [showQuantDropdown, setShowQuantDropdown] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const getIcon = (iconName: string) => {
-    switch (iconName) {
-      case 'Sparkles': return <Sparkles className="h-5 w-5 text-sky-400" />;
-      case 'Code2': return <Code2 className="h-5 w-5 text-indigo-400" />;
-      case 'BrainCircuit': return <BrainCircuit className="h-5 w-5 text-purple-400" />;
-      case 'Cpu': return <Cpu className="h-5 w-5 text-emerald-400" />;
-      case 'Eye': return <Eye className="h-5 w-5 text-amber-400" />;
-      case 'HeartPulse': return <HeartPulse className="h-5 w-5 text-rose-400" />;
-      case 'Bot': return <Bot className="h-5 w-5 text-cyan-400" />;
-      case 'Feather': return <Feather className="h-5 w-5 text-teal-400" />;
-      default: return <Sparkles className="h-5 w-5 text-sky-400" />;
-    }
-  };
+  const isHfModel = model.category === 'huggingface-llm';
+  const hfCleanRepo = model.huggingFaceRepo ? model.huggingFaceRepo.replace(/\/tree\/.*$/, '') : '';
+  const ollamaCleanSlug = model.slug.replace(/-gguf$/, '');
+  const ollamaDetailsUrl = model.slug.includes('claude') || model.slug.includes('opencode') || model.slug.includes('hermes') || model.slug.includes('openclaw')
+    ? 'https://ollama.com/search'
+    : `https://ollama.com/library/${ollamaCleanSlug}`;
 
   const copyOllama = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -67,12 +62,10 @@ export const ModelCard: React.FC<ModelCardProps> = ({
       className="group relative flex flex-col justify-between rounded-2xl border border-white/10 bg-zinc-900/50 p-5 backdrop-blur-md transition-all hover:border-blue-500/40 hover:bg-zinc-900/80 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)]"
     >
       <div>
-        {/* Top Header Row: Icon, Parameters, Badges */}
+        {/* Top Header Row: Organization Logo, Name, Parameters, Badges */}
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-zinc-800/90 border border-white/10 shadow-inner">
-              {getIcon(model.avatarIcon)}
-            </div>
+            <OrganizationLogo creator={model.creator} size="md" />
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-bold text-white text-base group-hover:text-blue-400 transition-colors">
@@ -87,10 +80,11 @@ export const ModelCard: React.FC<ModelCardProps> = ({
                       e.stopPropagation();
                       onOpenSocialModal();
                     }}
-                    className="font-semibold text-blue-400 hover:text-blue-300 hover:underline transition-colors inline-flex items-center gap-0.5 cursor-pointer"
+                    className="font-semibold text-red-400 hover:text-red-300 hover:underline transition-colors inline-flex items-center gap-1 cursor-pointer"
                     title="Click to view Preatom YT profile"
                   >
                     <span>{model.creator}</span>
+                    <span className="text-[10px] bg-red-500/20 text-red-300 px-1 rounded font-bold">PRO</span>
                   </button>
                 ) : (
                   <span className="font-medium text-zinc-300">{model.creator}</span>
@@ -100,7 +94,11 @@ export const ModelCard: React.FC<ModelCardProps> = ({
           </div>
 
           <div className="flex items-center gap-1.5 flex-wrap justify-end">
-            {model.modelScope === 'my_llm' ? (
+            {isHfModel ? (
+              <span className="rounded-lg bg-amber-500/10 px-2 py-0.5 text-[11px] font-bold text-amber-300 border border-amber-500/30">
+                🤗 Hugging Face
+              </span>
+            ) : model.modelScope === 'my_llm' ? (
               <span className="rounded-lg bg-purple-500/10 px-2 py-0.5 text-[11px] font-bold text-purple-300 border border-purple-500/30">
                 🚀 My LLM
               </span>
@@ -188,7 +186,7 @@ export const ModelCard: React.FC<ModelCardProps> = ({
           </div>
         </div>
 
-        {/* Inline Expandable Specs Tray (No popup modal needed) */}
+        {/* Inline Expandable Specs Tray */}
         {isExpanded && (
           <div className="mt-4 pt-4 border-t border-white/10 space-y-3.5 animate-in fade-in duration-200">
             {/* Benchmarks Grid */}
@@ -228,8 +226,8 @@ export const ModelCard: React.FC<ModelCardProps> = ({
               </div>
             </div>
 
-            {/* Architecture Details & HuggingFace Link */}
-            <div className="rounded-xl bg-zinc-950/80 p-3 text-xs space-y-1.5 border border-white/5">
+            {/* Architecture Details & Hub Links */}
+            <div className="rounded-xl bg-zinc-950/80 p-3 text-xs space-y-2 border border-white/5">
               <div className="flex justify-between text-zinc-400">
                 <span>License:</span>
                 <span className="font-medium text-zinc-200">{model.license}</span>
@@ -240,32 +238,73 @@ export const ModelCard: React.FC<ModelCardProps> = ({
                   {model.minVramGb === 0 ? 'Any 4GB+ RAM CPU' : `${model.minVramGb} GB VRAM GPU`}
                 </span>
               </div>
-              <div className="pt-1.5 border-t border-white/5 space-y-1.5 text-zinc-400">
-                <div className="flex items-center justify-between">
-                  <span>Hugging Face Hub:</span>
-                  <a
-                    href={`https://huggingface.co/${model.huggingFaceRepo.replace(/\/tree\/.*$/, '')}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1 font-mono text-cyan-400 hover:underline"
-                  >
-                    <span>{model.huggingFaceRepo.replace(/\/tree\/.*$/, '')}</span>
-                    <ExternalLink className="h-3 w-3" />
-                  </a>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-amber-300/90 font-medium">Direct Files & Versions:</span>
-                  <a
-                    href={`https://huggingface.co/${model.huggingFaceRepo.replace(/\/tree\/.*$/, '')}/tree/main`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 font-semibold text-amber-400 hover:text-amber-300 hover:underline bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-md"
-                  >
-                    <FolderGit2 className="h-3 w-3" />
-                    <span>Files & versions (tree/main)</span>
-                    <ExternalLink className="h-3 w-3" />
-                  </a>
-                </div>
+
+              {/* Source-specific Links */}
+              <div className="pt-2 border-t border-white/5 space-y-2 text-zinc-400">
+                {isHfModel ? (
+                  <>
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center gap-1">
+                        <span>🤗</span>
+                        <span>Hugging Face Hub:</span>
+                      </span>
+                      <a
+                        href={`https://huggingface.co/${hfCleanRepo}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 font-mono text-amber-400 hover:underline"
+                      >
+                        <span>{hfCleanRepo}</span>
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-amber-300 font-medium">Direct Files & Versions:</span>
+                      <a
+                        href={`https://huggingface.co/${hfCleanRepo}/tree/main`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 font-semibold text-amber-400 hover:text-amber-300 hover:underline bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-md"
+                      >
+                        <FolderGit2 className="h-3 w-3" />
+                        <span>Files & versions (tree/main)</span>
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center gap-1 text-sky-300">
+                        <span>🦙</span>
+                        <span>Ollama Library Page:</span>
+                      </span>
+                      <a
+                        href={ollamaDetailsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 font-mono text-sky-400 hover:underline"
+                      >
+                        <span>{ollamaCleanSlug}</span>
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    </div>
+                    {hfCleanRepo && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-zinc-500">Base HF Weights:</span>
+                        <a
+                          href={`https://huggingface.co/${hfCleanRepo}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1 font-mono text-zinc-400 hover:text-zinc-200 hover:underline text-[11px]"
+                        >
+                          <span>{hfCleanRepo}</span>
+                          <ExternalLink className="h-2.5 w-2.5" />
+                        </a>
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
             </div>
 
@@ -306,7 +345,7 @@ export const ModelCard: React.FC<ModelCardProps> = ({
         )}
       </div>
 
-      {/* Action Footer: Specs toggle, Direct Files & Versions Link, and Clean Size Badge */}
+      {/* Action Footer: Specs toggle, Source Link, and Clean Size Badge */}
       <div className="mt-5 pt-3 border-t border-white/5 flex flex-wrap items-center justify-between gap-2">
         
         {/* Toggle Inline Specs */}
@@ -320,19 +359,34 @@ export const ModelCard: React.FC<ModelCardProps> = ({
           {isExpanded ? <ChevronUp className="h-3 w-3 text-zinc-400" /> : <ChevronDown className="h-3 w-3 text-zinc-400" />}
         </button>
 
-        {/* Direct Files and Versions Link */}
-        <a
-          href={`https://huggingface.co/${model.huggingFaceRepo.replace(/\/tree\/.*$/, '')}/tree/main`}
-          target="_blank"
-          rel="noopener noreferrer"
-          id={`btn-hf-files-${model.id}`}
-          className="inline-flex items-center gap-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 px-3 py-2 text-xs font-bold text-amber-300 transition-all cursor-pointer shadow-sm hover:scale-[1.02]"
-          title={`Open ${model.name} Files and versions on Hugging Face`}
-        >
-          <FolderGit2 className="h-3.5 w-3.5 text-amber-400" />
-          <span>Files & versions</span>
-          <ExternalLink className="h-3 w-3 opacity-70" />
-        </a>
+        {/* Source Link (Hugging Face Files & versions vs Ollama Model Details) */}
+        {isHfModel ? (
+          <a
+            href={`https://huggingface.co/${hfCleanRepo}/tree/main`}
+            target="_blank"
+            rel="noopener noreferrer"
+            id={`btn-hf-files-${model.id}`}
+            className="inline-flex items-center gap-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 px-3 py-2 text-xs font-bold text-amber-300 transition-all cursor-pointer shadow-sm hover:scale-[1.02]"
+            title={`Open ${model.name} Files and versions on Hugging Face`}
+          >
+            <span className="text-sm leading-none">🤗</span>
+            <span>HF Files & versions</span>
+            <ExternalLink className="h-3 w-3 opacity-70" />
+          </a>
+        ) : (
+          <a
+            href={ollamaDetailsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            id={`btn-ollama-details-${model.id}`}
+            className="inline-flex items-center gap-1.5 rounded-xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 px-3 py-2 text-xs font-bold text-sky-300 transition-all cursor-pointer shadow-sm hover:scale-[1.02]"
+            title={`Open ${model.name} Ollama Model Details`}
+          >
+            <span className="text-sm leading-none">🦙</span>
+            <span>Ollama Details</span>
+            <ExternalLink className="h-3 w-3 opacity-70" />
+          </a>
+        )}
 
         {/* Clean Size Display Badge */}
         <div className="flex items-center gap-1.5 rounded-xl bg-zinc-800/80 border border-white/10 px-3 py-1.5 text-xs">
@@ -346,4 +400,5 @@ export const ModelCard: React.FC<ModelCardProps> = ({
     </div>
   );
 };
+
 

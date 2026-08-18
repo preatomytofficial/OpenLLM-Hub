@@ -9,7 +9,7 @@ export type ModelCategory =
   | 'medical-specialized'
   | 'general-chat';
 
-export type ModelScope = 'all' | 'public' | 'my_llm';
+export type ModelScope = 'all' | 'public' | 'huggingface' | 'my_llm';
 
 export type QuantizationFormat = 
   | 'GGUF Q4_K_M'

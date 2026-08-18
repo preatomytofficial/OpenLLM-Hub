@@ -13,6 +13,7 @@ import {
   Rocket
 } from 'lucide-react';
 import { ModelCategory, ModelScope } from '../types';
+import { BrandLogo } from './BrandLogo';
 
 interface HeroSectionProps {
   selectedScope: ModelScope | 'all';
@@ -23,6 +24,7 @@ interface HeroSectionProps {
   setSearchQuery: (query: string) => void;
   totalModels: number;
   publicCount: number;
+  huggingFaceCount: number;
   myLlmCount: number;
   categoryCounts: Record<ModelCategory, number>;
   totalDownloads: string;
@@ -38,6 +40,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   setSearchQuery,
   totalModels,
   publicCount,
+  huggingFaceCount,
   myLlmCount,
   categoryCounts,
   totalDownloads,
@@ -66,18 +69,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         {/* Top Announcement Pill */}
         <div className="flex justify-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 py-1 pl-1.5 pr-4 text-xs font-semibold text-blue-300 shadow-[0_0_15px_rgba(59,130,246,0.2)] backdrop-blur-md">
-            <img 
-              src="/favicon.png" 
-              alt="Logo" 
-              className="h-5 w-5 rounded-full object-cover border border-blue-400/40"
-              referrerPolicy="no-referrer"
-            />
+            <BrandLogo size="sm" />
             <span className="font-semibold text-white">
               Open & Free LLM Hub
             </span>
             <span className="text-zinc-600">|</span>
             <span className="text-zinc-400">
-              Public Foundation & Custom Fine-Tuned Models
+              Public Foundation, Hugging Face & Custom Models
             </span>
           </div>
         </div>
@@ -87,15 +85,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-[1.18]">
             All-in-One AI Models Hub.{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-indigo-400">
-              Public & Custom LLMs
+              Public, Hugging Face & Custom LLMs
             </span>
           </h1>
 
           <p className="mt-3.5 text-sm sm:text-base text-zinc-400 leading-relaxed max-w-2xl mx-auto">
-            Discover, compare, and run top Public LLMs and Agentic developer tools — featuring Claude Code, OpenCode, Hermes Agent, OpenClaw, Qwen3.6, and GLM-5.2:cloud with 1-click Ollama launch & run commands.
+            Discover, compare, and run top Public LLMs, Hugging Face GGUF models, and Agentic developer tools — featuring Claude Code, OpenCode, Hermes Agent, OpenClaw, Qwen3.6, and GLM-5.2:cloud with 1-click Ollama launch and direct Hugging Face links.
           </p>
 
-          {/* Quick Scope Selectors (Public LLM vs My LLM vs All) */}
+          {/* Quick Scope Selectors (All vs Public LLM vs Hugging Face LLM vs My LLM) */}
           <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5">
             <button
               id="scope-all-btn"
@@ -103,7 +101,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 setSelectedScope('all');
                 onExploreClick();
               }}
-              className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-2 rounded-full px-4 sm:px-5 py-2.5 text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                 selectedScope === 'all'
                   ? 'bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.4)] scale-105'
                   : 'bg-zinc-900/80 text-zinc-400 hover:text-white border border-white/10 hover:border-white/20'
@@ -122,7 +120,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 setSelectedScope('public');
                 onExploreClick();
               }}
-              className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-2 rounded-full px-4 sm:px-5 py-2.5 text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                 selectedScope === 'public'
                   ? 'bg-sky-600 text-white shadow-[0_0_20px_rgba(2,132,199,0.4)] scale-105'
                   : 'bg-zinc-900/80 text-zinc-400 hover:text-white border border-white/10 hover:border-white/20'
@@ -135,20 +133,40 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </span>
             </button>
 
+            {/* Hugging Face LLM Scope Selector directly beside Public LLM */}
+            <button
+              id="scope-huggingface-btn"
+              onClick={() => {
+                setSelectedScope('huggingface');
+                onExploreClick();
+              }}
+              className={`flex items-center gap-2 rounded-full px-4 sm:px-5 py-2.5 text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                selectedScope === 'huggingface'
+                  ? 'bg-amber-600 text-white shadow-[0_0_20px_rgba(217,119,6,0.4)] scale-105'
+                  : 'bg-zinc-900/80 text-zinc-400 hover:text-amber-300 border border-white/10 hover:border-amber-500/30'
+              }`}
+            >
+              <span className="text-base leading-none">🤗</span>
+              <span>Hugging Face LLM</span>
+              <span className="rounded-full bg-amber-950/60 px-2 py-0.5 text-xs text-amber-200 border border-amber-400/20">
+                {huggingFaceCount}
+              </span>
+            </button>
+
             <button
               id="scope-my-llm-btn"
               onClick={() => {
                 setSelectedScope('my_llm');
                 onExploreClick();
               }}
-              className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-2 rounded-full px-4 sm:px-5 py-2.5 text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                 selectedScope === 'my_llm'
                   ? 'bg-purple-600 text-white shadow-[0_0_20px_rgba(147,51,234,0.4)] scale-105'
                   : 'bg-zinc-900/80 text-zinc-400 hover:text-white border border-white/10 hover:border-white/20'
               }`}
             >
               <Rocket className="h-4 w-4 text-purple-300" />
-              <span>My LLM (Custom)</span>
+              <span>My LLM</span>
               <span className="rounded-full bg-purple-950/60 px-2 py-0.5 text-xs text-purple-200 border border-purple-400/20">
                 {myLlmCount}
               </span>

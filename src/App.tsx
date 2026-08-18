@@ -7,7 +7,6 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { ModelCard } from './components/ModelCard';
-import { AddCustomModelModal } from './components/AddCustomModelModal';
 import { DownloadToast } from './components/DownloadToast';
 import { Footer } from './components/Footer';
 import { SocialModal } from './components/SocialModal';
@@ -18,9 +17,7 @@ import {
   ArrowUpDown, 
   Search,
   Globe2,
-  Rocket,
   Sparkles,
-  Plus,
   Layers,
   Filter
 } from 'lucide-react';
@@ -32,35 +29,9 @@ export default function App() {
   const [selectedCategory, setSelectedCategory] = useState<ModelCategory>('all');
   const [paramFilter, setParamFilter] = useState<string>('all'); // all | small | medium | large
   const [sortBy, setSortBy] = useState<'popular' | 'downloads' | 'rating' | 'size'>('popular');
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isSocialModalOpen, setIsSocialModalOpen] = useState(false);
 
-  // Local storage for user's custom added models
-  const [customUserModels, setCustomUserModels] = useState<LLMModel[]>(() => {
-    try {
-      const saved = localStorage.getItem('openllm_custom_models');
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
-
-  const handleAddCustomModel = (newModel: LLMModel) => {
-    const updated = [newModel, ...customUserModels];
-    setCustomUserModels(updated);
-    try {
-      localStorage.setItem('openllm_custom_models', JSON.stringify(updated));
-    } catch (e) {
-      console.error(e);
-    }
-    setSelectedScope('my_llm');
-    setSelectedCategory('all');
-  };
-
-  // Combine built-in models with custom user models
-  const allAvailableModels = useMemo(() => {
-    return [...customUserModels, ...MODELS_DATA];
-  }, [customUserModels]);
+  const allAvailableModels = MODELS_DATA;
 
   const [activeDownload, setActiveDownload] = useState<{ model: LLMModel; quant: QuantizationOption } | null>(null);
 
@@ -73,17 +44,12 @@ export default function App() {
     return allAvailableModels.filter(m => m.category === 'huggingface-llm').length;
   }, [allAvailableModels]);
 
-  const myLlmCount = useMemo(() => {
-    return allAvailableModels.filter(m => m.modelScope === 'my_llm').length;
-  }, [allAvailableModels]);
-
   // Compute category counts relative to selectedScope
   const categoryCounts = useMemo(() => {
     const scopeFiltered = allAvailableModels.filter(m => {
       if (selectedScope === 'all') return true;
       if (selectedScope === 'public') return m.modelScope === 'public' && m.category !== 'huggingface-llm';
       if (selectedScope === 'huggingface') return m.category === 'huggingface-llm';
-      if (selectedScope === 'my_llm') return m.modelScope === 'my_llm';
       return true;
     });
 
@@ -111,14 +77,11 @@ export default function App() {
   // Filter and sort models
   const filteredModels = useMemo(() => {
     return allAvailableModels.filter((model) => {
-      // Scope filter (Public LLM vs Hugging Face LLM vs My LLM)
+      // Scope filter (Public LLM vs Hugging Face LLM)
       if (selectedScope === 'public' && (model.modelScope !== 'public' || model.category === 'huggingface-llm')) {
         return false;
       }
       if (selectedScope === 'huggingface' && model.category !== 'huggingface-llm') {
-        return false;
-      }
-      if (selectedScope === 'my_llm' && model.modelScope !== 'my_llm') {
         return false;
       }
 
@@ -187,7 +150,6 @@ export default function App() {
         setSearchQuery={setSearchQuery}
         totalDownloads={TOTAL_STATS.totalDownloads}
         onScrollToModels={scrollToModels}
-        onOpenAddModelModal={() => setIsAddModalOpen(true)}
         onOpenSocialModal={() => setIsSocialModalOpen(true)}
       />
 
@@ -202,7 +164,6 @@ export default function App() {
         totalModels={allAvailableModels.length}
         publicCount={publicCount}
         huggingFaceCount={huggingFaceCount}
-        myLlmCount={myLlmCount}
         categoryCounts={categoryCounts}
         totalDownloads={TOTAL_STATS.totalDownloads}
         onExploreClick={scrollToModels}
@@ -228,12 +189,11 @@ export default function App() {
               <p className="mt-1 text-xs text-zinc-400">
                 {selectedScope === 'public' && 'Showing Public Foundation Models from Meta, DeepSeek, Google DeepMind, Microsoft & Qwen.'}
                 {selectedScope === 'huggingface' && 'Showing Trending Hugging Face GGUF models with direct hub repositories & Files and versions links.'}
-                {selectedScope === 'my_llm' && 'Showing Custom Fine-Tuned Models specialized for Bengali NLP, Coding, Edge reasoning, and custom domains.'}
-                {selectedScope === 'all' && 'Browse all Public Open-Weights, Hugging Face, and Custom Fine-Tuned models in one unified catalog.'}
+                {selectedScope === 'all' && 'Browse all Public Open-Weights and Hugging Face models in one unified catalog.'}
               </p>
             </div>
 
-            {/* Scope Toggle Tabs (Public LLM vs Hugging Face LLM vs My LLM) */}
+            {/* Scope Toggle Tabs (All Models vs Public LLM vs Hugging Face LLM) */}
             <div className="flex items-center gap-2 flex-wrap">
               <div className="flex items-center rounded-xl bg-zinc-950 p-1 border border-white/10">
                 <button
@@ -283,32 +243,7 @@ export default function App() {
                     {huggingFaceCount}
                   </span>
                 </button>
-
-                <button
-                  id="tab-scope-my-llm"
-                  onClick={() => setSelectedScope('my_llm')}
-                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    selectedScope === 'my_llm'
-                      ? 'bg-purple-600 text-white shadow-[0_0_12px_rgba(147,51,234,0.4)]'
-                      : 'text-zinc-400 hover:text-purple-300'
-                  }`}
-                >
-                  <Rocket className="h-3.5 w-3.5 text-purple-400" />
-                  <span>My LLM</span>
-                  <span className="rounded-full bg-purple-950/60 px-1.5 py-0.2 text-[10px] text-purple-200">
-                    {myLlmCount}
-                  </span>
-                </button>
               </div>
-
-              {/* Add Custom Model Button */}
-              <button
-                onClick={() => setIsAddModalOpen(true)}
-                className="flex items-center gap-1.5 rounded-xl bg-purple-600/20 border border-purple-500/30 hover:bg-purple-600/30 px-3.5 py-1.5 text-xs font-bold text-purple-300 transition-all cursor-pointer"
-              >
-                <Plus className="h-3.5 w-3.5" />
-                <span>+ Add to My LLM</span>
-              </button>
             </div>
 
           </div>
@@ -411,13 +346,6 @@ export default function App() {
         )}
 
       </main>
-
-      {/* Add Custom Model Modal */}
-      <AddCustomModelModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onAddModel={handleAddCustomModel}
-      />
 
       {/* Global Footer */}
       <Footer

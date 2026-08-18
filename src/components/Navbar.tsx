@@ -2,8 +2,7 @@ import React from 'react';
 import { 
   Sparkles, 
   Search,
-  Globe2,
-  Rocket
+  Globe2
 } from 'lucide-react';
 import { ModelScope } from '../types';
 import { BrandLogo } from './BrandLogo';
@@ -17,7 +16,6 @@ interface NavbarProps {
   setSearchQuery: (query: string) => void;
   totalDownloads: string;
   onScrollToModels: () => void;
-  onOpenAddModelModal: () => void;
   onOpenSocialModal: () => void;
 }
 
@@ -30,7 +28,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   setSearchQuery,
   totalDownloads,
   onScrollToModels,
-  onOpenAddModelModal,
   onOpenSocialModal
 }) => {
   return (
@@ -126,18 +123,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <span className="text-xs leading-none">🤗</span>
               <span>Hugging Face LLM</span>
-            </button>
-            <button
-              onClick={() => {
-                setSelectedScope('my_llm');
-                onScrollToModels();
-              }}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-semibold transition-all cursor-pointer ${
-                selectedScope === 'my_llm' ? 'bg-purple-600 text-white' : 'text-zinc-400 hover:text-purple-300'
-              }`}
-            >
-              <Rocket className="h-3 w-3 text-purple-400" />
-              <span>My LLM</span>
             </button>
           </div>
 

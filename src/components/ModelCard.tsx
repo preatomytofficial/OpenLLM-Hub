@@ -1,0 +1,349 @@
+import React, { useState } from 'react';
+import { 
+  Download, 
+  Terminal, 
+  Cpu, 
+  Check, 
+  Copy, 
+  Sparkles, 
+  Layers, 
+  Code2, 
+  BrainCircuit, 
+  Eye, 
+  HeartPulse, 
+  Bot, 
+  Feather, 
+  Info,
+  ChevronDown,
+  ChevronUp,
+  ExternalLink,
+  Zap,
+  Gauge,
+  FolderGit2
+} from 'lucide-react';
+import { LLMModel, QuantizationOption } from '../types';
+
+interface ModelCardProps {
+  model: LLMModel;
+  onDownload: (model: LLMModel, quant: QuantizationOption) => void;
+  onOpenSocialModal?: () => void;
+}
+
+export const ModelCard: React.FC<ModelCardProps> = ({
+  model,
+  onDownload,
+  onOpenSocialModal
+}) => {
+  const [copiedOllama, setCopiedOllama] = useState(false);
+  const [showQuantDropdown, setShowQuantDropdown] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const getIcon = (iconName: string) => {
+    switch (iconName) {
+      case 'Sparkles': return <Sparkles className="h-5 w-5 text-sky-400" />;
+      case 'Code2': return <Code2 className="h-5 w-5 text-indigo-400" />;
+      case 'BrainCircuit': return <BrainCircuit className="h-5 w-5 text-purple-400" />;
+      case 'Cpu': return <Cpu className="h-5 w-5 text-emerald-400" />;
+      case 'Eye': return <Eye className="h-5 w-5 text-amber-400" />;
+      case 'HeartPulse': return <HeartPulse className="h-5 w-5 text-rose-400" />;
+      case 'Bot': return <Bot className="h-5 w-5 text-cyan-400" />;
+      case 'Feather': return <Feather className="h-5 w-5 text-teal-400" />;
+      default: return <Sparkles className="h-5 w-5 text-sky-400" />;
+    }
+  };
+
+  const copyOllama = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(model.ollamaCommand);
+    setCopiedOllama(true);
+    setTimeout(() => setCopiedOllama(false), 2000);
+  };
+
+  const popularQuant = model.quantizations.find(q => q.isPopular) || model.quantizations[0];
+
+  return (
+    <div 
+      id={`model-card-${model.id}`}
+      className="group relative flex flex-col justify-between rounded-2xl border border-white/10 bg-zinc-900/50 p-5 backdrop-blur-md transition-all hover:border-blue-500/40 hover:bg-zinc-900/80 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)]"
+    >
+      <div>
+        {/* Top Header Row: Icon, Parameters, Badges */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-zinc-800/90 border border-white/10 shadow-inner">
+              {getIcon(model.avatarIcon)}
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-white text-base group-hover:text-blue-400 transition-colors">
+                  {model.name}
+                </span>
+              </div>
+              <p className="text-xs text-zinc-400">
+                {model.baseArchitecture} •{' '}
+                {model.creator === 'Preatom YT' && onOpenSocialModal ? (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onOpenSocialModal();
+                    }}
+                    className="font-semibold text-blue-400 hover:text-blue-300 hover:underline transition-colors inline-flex items-center gap-0.5 cursor-pointer"
+                    title="Click to view Preatom YT profile"
+                  >
+                    <span>{model.creator}</span>
+                  </button>
+                ) : (
+                  <span className="font-medium text-zinc-300">{model.creator}</span>
+                )}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1.5 flex-wrap justify-end">
+            {model.modelScope === 'my_llm' ? (
+              <span className="rounded-lg bg-purple-500/10 px-2 py-0.5 text-[11px] font-bold text-purple-300 border border-purple-500/30">
+                🚀 My LLM
+              </span>
+            ) : (
+              <span className="rounded-lg bg-sky-500/10 px-2 py-0.5 text-[11px] font-bold text-sky-300 border border-sky-500/30">
+                🌐 Public LLM
+              </span>
+            )}
+            <span className="rounded-lg bg-zinc-800 border border-white/10 px-2 py-0.5 text-xs font-bold text-zinc-200 tracking-wide font-mono">
+              {model.parameterSize}
+            </span>
+            {model.isFeatured && (
+              <span className="rounded-lg bg-amber-500/10 px-2 py-0.5 text-[11px] font-semibold text-amber-300 border border-amber-500/20">
+                ★ Featured
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Tagline / Subtitle */}
+        <p className="mt-3 text-xs font-semibold text-zinc-300 line-clamp-1">
+          {model.tagline}
+        </p>
+
+        {/* Description */}
+        <p className="mt-1.5 text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+          {model.description}
+        </p>
+
+        {/* Key Metrics / Specs Badges */}
+        <div className="mt-4 flex flex-wrap items-center gap-1.5 text-[11px]">
+          <span className="inline-flex items-center gap-1 rounded-lg bg-zinc-800/60 border border-white/5 px-2 py-1 font-medium text-zinc-300">
+            <Layers className="h-3 w-3 text-zinc-500" />
+            {model.contextWindow} Context
+          </span>
+
+          <span className="inline-flex items-center gap-1 rounded-lg bg-blue-500/10 px-2 py-1 font-medium text-blue-300 border border-blue-500/20">
+            <Cpu className="h-3 w-3 text-blue-400" />
+            {model.minVramGb === 0 ? 'CPU RAM: 4GB+' : `VRAM: ${model.minVramGb}GB+`}
+          </span>
+
+          {model.benchmarks.banglaNlpScore && (
+            <span className="inline-flex items-center gap-1 rounded-lg bg-emerald-500/10 px-2 py-1 font-semibold text-emerald-300 border border-emerald-500/20">
+              BanglaNLP: {model.benchmarks.banglaNlpScore}%
+            </span>
+          )}
+
+          {model.benchmarks.codingHumanEval && !model.benchmarks.banglaNlpScore && (
+            <span className="inline-flex items-center gap-1 rounded-lg bg-indigo-500/10 px-2 py-1 font-semibold text-indigo-300 border border-indigo-500/20">
+              HumanEval: {model.benchmarks.codingHumanEval}%
+            </span>
+          )}
+
+          <span className="inline-flex items-center gap-1 rounded-lg bg-zinc-800/40 px-2 py-1 text-zinc-400 border border-white/5">
+            <Download className="h-3 w-3 text-zinc-500" />
+            {(model.downloadsCount / 1000).toFixed(0)}k downloads
+          </span>
+        </div>
+
+        {/* Ollama One-Click CLI Copy Pill */}
+        <div className="mt-4 rounded-xl border border-white/10 bg-zinc-950/90 p-2.5 text-zinc-100 shadow-inner">
+          <div className="flex items-center justify-between text-[11px] text-zinc-400 mb-1">
+            <span className="flex items-center gap-1 font-mono text-cyan-400">
+              <Terminal className="h-3 w-3" /> {model.ollamaCommand.startsWith('ollama launch') ? 'Ollama CLI Launch' : 'Ollama 1-Line Run'}
+            </span>
+            <button
+              onClick={copyOllama}
+              className="flex items-center gap-1 text-[10px] font-semibold text-zinc-400 hover:text-white transition-colors cursor-pointer"
+            >
+              {copiedOllama ? (
+                <>
+                  <Check className="h-3 w-3 text-emerald-400" />
+                  <span className="text-emerald-400">Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="h-3 w-3" />
+                  <span>Copy Command</span>
+                </>
+              )}
+            </button>
+          </div>
+          <div className="font-mono text-xs text-zinc-200 select-all overflow-x-auto whitespace-nowrap">
+            {model.ollamaCommand}
+          </div>
+        </div>
+
+        {/* Inline Expandable Specs Tray (No popup modal needed) */}
+        {isExpanded && (
+          <div className="mt-4 pt-4 border-t border-white/10 space-y-3.5 animate-in fade-in duration-200">
+            {/* Benchmarks Grid */}
+            <div>
+              <div className="flex items-center justify-between text-[11px] font-bold text-zinc-300 uppercase tracking-wider mb-2">
+                <span className="flex items-center gap-1">
+                  <Gauge className="h-3.5 w-3.5 text-cyan-400" />
+                  Empirical Benchmark Scores
+                </span>
+                <span className="text-zinc-500 font-mono text-[10px]">{model.benchmarks.tokensPerSec} tok/s</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                {model.benchmarks.banglaNlpScore && (
+                  <div className="rounded-xl bg-zinc-950 p-2 border border-white/5">
+                    <div className="text-[10px] text-zinc-400">BanglaNLP</div>
+                    <div className="font-bold text-emerald-400 font-mono text-sm">{model.benchmarks.banglaNlpScore}%</div>
+                  </div>
+                )}
+                {model.benchmarks.codingHumanEval && (
+                  <div className="rounded-xl bg-zinc-950 p-2 border border-white/5">
+                    <div className="text-[10px] text-zinc-400">HumanEval (Code)</div>
+                    <div className="font-bold text-blue-400 font-mono text-sm">{model.benchmarks.codingHumanEval}%</div>
+                  </div>
+                )}
+                {model.benchmarks.mathGsm8k && (
+                  <div className="rounded-xl bg-zinc-950 p-2 border border-white/5">
+                    <div className="text-[10px] text-zinc-400">GSM8K (Math)</div>
+                    <div className="font-bold text-purple-400 font-mono text-sm">{model.benchmarks.mathGsm8k}%</div>
+                  </div>
+                )}
+                {model.benchmarks.mmlu && (
+                  <div className="rounded-xl bg-zinc-950 p-2 border border-white/5">
+                    <div className="text-[10px] text-zinc-400">MMLU General</div>
+                    <div className="font-bold text-amber-400 font-mono text-sm">{model.benchmarks.mmlu}%</div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Architecture Details & HuggingFace Link */}
+            <div className="rounded-xl bg-zinc-950/80 p-3 text-xs space-y-1.5 border border-white/5">
+              <div className="flex justify-between text-zinc-400">
+                <span>License:</span>
+                <span className="font-medium text-zinc-200">{model.license}</span>
+              </div>
+              <div className="flex justify-between text-zinc-400">
+                <span>Min Hardware:</span>
+                <span className="font-medium text-zinc-200">
+                  {model.minVramGb === 0 ? 'Any 4GB+ RAM CPU' : `${model.minVramGb} GB VRAM GPU`}
+                </span>
+              </div>
+              <div className="pt-1.5 border-t border-white/5 space-y-1.5 text-zinc-400">
+                <div className="flex items-center justify-between">
+                  <span>Hugging Face Hub:</span>
+                  <a
+                    href={`https://huggingface.co/${model.huggingFaceRepo.replace(/\/tree\/.*$/, '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 font-mono text-cyan-400 hover:underline"
+                  >
+                    <span>{model.huggingFaceRepo.replace(/\/tree\/.*$/, '')}</span>
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-amber-300/90 font-medium">Direct Files & Versions:</span>
+                  <a
+                    href={`https://huggingface.co/${model.huggingFaceRepo.replace(/\/tree\/.*$/, '')}/tree/main`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 font-semibold text-amber-400 hover:text-amber-300 hover:underline bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-md"
+                  >
+                    <FolderGit2 className="h-3 w-3" />
+                    <span>Files & versions (tree/main)</span>
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Available Quantizations Direct List */}
+            <div>
+              <div className="text-[11px] font-bold text-zinc-300 uppercase tracking-wider mb-1.5">
+                Model Quantization & Disk Size:
+              </div>
+              <div className="space-y-1">
+                {model.quantizations.map((quant, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-center justify-between rounded-xl bg-zinc-950 px-3 py-2 text-xs border border-white/5"
+                  >
+                    <div>
+                      <div className="font-semibold text-white flex items-center gap-1.5">
+                        <span>{quant.format}</span>
+                        {quant.isPopular && (
+                          <span className="rounded bg-blue-500/20 border border-blue-500/30 px-1 text-[9px] font-bold text-blue-300">
+                            DEFAULT
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-[10px] text-zinc-500">{quant.recommendedVram}</span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-xs font-semibold text-cyan-400 bg-zinc-900 px-2 py-0.5 rounded-lg border border-white/10">
+                        {quant.size}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        )}
+      </div>
+
+      {/* Action Footer: Specs toggle, Direct Files & Versions Link, and Clean Size Badge */}
+      <div className="mt-5 pt-3 border-t border-white/5 flex flex-wrap items-center justify-between gap-2">
+        
+        {/* Toggle Inline Specs */}
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          id={`btn-details-${model.id}`}
+          className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer border border-white/5 bg-zinc-800/40"
+        >
+          <Info className="h-3.5 w-3.5 text-blue-400" />
+          <span>{isExpanded ? 'Hide Specs' : 'Specs'}</span>
+          {isExpanded ? <ChevronUp className="h-3 w-3 text-zinc-400" /> : <ChevronDown className="h-3 w-3 text-zinc-400" />}
+        </button>
+
+        {/* Direct Files and Versions Link */}
+        <a
+          href={`https://huggingface.co/${model.huggingFaceRepo.replace(/\/tree\/.*$/, '')}/tree/main`}
+          target="_blank"
+          rel="noopener noreferrer"
+          id={`btn-hf-files-${model.id}`}
+          className="inline-flex items-center gap-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 px-3 py-2 text-xs font-bold text-amber-300 transition-all cursor-pointer shadow-sm hover:scale-[1.02]"
+          title={`Open ${model.name} Files and versions on Hugging Face`}
+        >
+          <FolderGit2 className="h-3.5 w-3.5 text-amber-400" />
+          <span>Files & versions</span>
+          <ExternalLink className="h-3 w-3 opacity-70" />
+        </a>
+
+        {/* Clean Size Display Badge */}
+        <div className="flex items-center gap-1.5 rounded-xl bg-zinc-800/80 border border-white/10 px-3 py-1.5 text-xs">
+          <span className="text-[11px] text-zinc-400 font-medium">Size:</span>
+          <span className="font-mono font-bold text-cyan-300">
+            {popularQuant.size}
+          </span>
+        </div>
+
+      </div>
+    </div>
+  );
+};
+

@@ -1,0 +1,6 @@
+{
+  "name": "All-in-One LLM Platform",
+  "description": "An all-in-one open-source LLM hub to explore, test, benchmark, and download custom AI models for free in GGUF, Safetensors, and Ollama formats.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

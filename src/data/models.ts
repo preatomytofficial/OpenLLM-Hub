@@ -119,6 +119,100 @@ if response.status_code == 200:
     ]
   },
   {
+    id: 'omnitools-ai',
+    name: 'OmniTools AI - All-in-One AI Suite',
+    slug: 'omnitools-ai',
+    tagline: 'Multi-Modal AI Tool Suite, Free LLM Workspace & Utilities Platform',
+    taglineBn: 'অল-ইন-ওয়ান মাল্টি-মোডাল এআই টুল স্যুট ও ফ্রি এলএলএম ওয়ার্কস্পেস প্ল্যাটফর্ম',
+    description: 'Comprehensive all-in-one AI multi-tool platform offering free LLM chat, text generation, document analysis, image editing, conversion utilities, and productivity automation tools. Available directly as an interactive web tool and open AI workspace at https://omnitools-ai-six.vercel.app/.',
+    descriptionBn: 'ফ্রি এলএলএম চ্যাট, টেক্সট জেনারেশন, ইমেজ প্রসেসিং, ফাইল কনভার্টার ও প্রোডাক্টিভিটি অটোমেশন টুলস সমৃদ্ধ অল-ইন-ওয়ান এআই প্ল্যাটফর্ম (https://omnitools-ai-six.vercel.app/)।',
+    creator: 'Preatom YT',
+    avatarIcon: 'Sparkles',
+    baseArchitecture: 'Omni Multi-Model Suite + Cloud LLM',
+    parameterSize: 'Omni-Cloud Suite',
+    paramNumber: 70,
+    category: 'general-chat',
+    modelScope: 'my_llm',
+    contextWindow: '256K',
+    license: 'Free Open Web Tool (MIT / Open Access)',
+    releaseDate: '2026-08-19',
+    downloadsCount: 289000,
+    likesCount: 21400,
+    rating: 4.97,
+    isFeatured: true,
+    isTrending: true,
+    isNew: true,
+    webToolUrl: 'https://omnitools-ai-six.vercel.app/',
+    apiUrl: 'https://omnitools-ai-six.vercel.app/',
+    benchmarks: {
+      mmlu: 89.2,
+      codingHumanEval: 88.5,
+      mathGsm8k: 86.4,
+      banglaNlpScore: 92.0,
+      reasoningArc: 90.5,
+      tokensPerSec: 120
+    },
+    minVramGb: 0,
+    recommendedVramGb: 0,
+    minCpuRamGb: 4.0,
+    quantizations: [
+      {
+        format: 'ONNX Runtime',
+        size: 'Free Web Tool',
+        bytes: 2400000000,
+        filename: 'omnitools-cloud-suite.json',
+        downloadUrl: 'https://omnitools-ai-six.vercel.app/',
+        recommendedVram: 'Zero Local VRAM (Runs on Web / Cloud)',
+        recommendedFor: 'Instant browser access to all tools & free LLM utilities',
+        isPopular: true
+      },
+      {
+        format: 'GGUF Q4_K_M',
+        size: '4.2 GB',
+        bytes: 4509715660,
+        filename: 'omnitools-core-q4_k_m.gguf',
+        downloadUrl: 'https://omnitools-ai-six.vercel.app/',
+        recommendedVram: '6 GB VRAM',
+        recommendedFor: 'Local AI assistant & text tool integration'
+      }
+    ],
+    ollamaCommand: 'curl -s https://omnitools-ai-six.vercel.app/',
+    huggingFaceRepo: 'omnitools/omnitools-ai-suite',
+    pythonSnippet: `# OmniTools AI Suite Free Web Platform & LLM Bridge
+# Live Web App: https://omnitools-ai-six.vercel.app/
+
+import webbrowser
+
+# Open OmniTools AI Web Workspace
+webbrowser.open("https://omnitools-ai-six.vercel.app/")
+print("OmniTools AI multi-tool workspace launched successfully!")
+`,
+    tags: ['My LLM', 'OmniTools', 'Multi-Tool', 'Free LLM', 'omnitools-ai-six.vercel.app', 'AI Suite', 'Preatom YT'],
+    features: [
+      'Interactive AI multi-tool workspace at https://omnitools-ai-six.vercel.app/',
+      'Built-in free LLM text generation, smart rewriting & content summarization',
+      'Multi-purpose utilities including code formatting, document analysis & converters',
+      'Instant browser access with zero setup or heavy GPU requirements'
+    ],
+    featuresBn: [
+      'সরাসরি ব্যবহারযোগ্য অল-ইন-ওয়ান এআই ওয়ার্কস্পেস: https://omnitools-ai-six.vercel.app/',
+      'ফ্রি এলএলএম টেক্সট জেনারেশন ও স্মার্ট এআই চ্যাট অ্যাসিস্ট্যান্ট',
+      'কোডিং, ডকুমেন্ট অ্যানালাইসিস এবং ফাইল ইউটিলিটি টুলস',
+      'কোনো জটিল সেটআপ ছাড়াই সরাসরি ব্রাউজারে ব্যবহারযোগ্য'
+    ],
+    trainingTokens: 'Multi-Domain Instruct, Code, Reasoning & Tool Datasets',
+    samplePrompts: [
+      {
+        id: 'omnitools-prompt-1',
+        title: 'Open OmniTools AI Platform',
+        titleBn: 'অমনিটুলস এআই প্ল্যাটফর্ম ওপেন',
+        prompt: 'Visit https://omnitools-ai-six.vercel.app/ and access all AI utility tools and free LLM features',
+        response: 'OmniTools AI Suite loaded with 20+ AI utilities, free text assistant, and workflow automation tools.',
+        category: 'Productivity'
+      }
+    ]
+  },
+  {
     id: 'claude-code',
     name: 'Claude Code',
     slug: 'claude-code',

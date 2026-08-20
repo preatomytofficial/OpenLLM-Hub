@@ -306,7 +306,7 @@ export const ModelCard: React.FC<ModelCardProps> = ({
                       rel="noopener noreferrer"
                       className="flex items-center gap-1 font-mono text-purple-400 hover:underline"
                     >
-                      <span>opan-bg.vercel.app</span>
+                      <span>{model.webToolUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')}</span>
                       <ExternalLink className="h-3 w-3" />
                     </a>
                   </div>
@@ -315,7 +315,7 @@ export const ModelCard: React.FC<ModelCardProps> = ({
                   <div className="flex items-center justify-between">
                     <span className="flex items-center gap-1 text-cyan-300 font-medium">
                       <span>⚡</span>
-                      <span>Free API Docs:</span>
+                      <span>{model.apiUrl.includes('.html') || model.apiUrl.includes('/api') ? 'Free API Endpoint:' : 'Free LLM Platform:'}</span>
                     </span>
                     <a
                       href={model.apiUrl}
@@ -323,7 +323,7 @@ export const ModelCard: React.FC<ModelCardProps> = ({
                       rel="noopener noreferrer"
                       className="flex items-center gap-1 font-mono text-cyan-400 hover:underline"
                     >
-                      <span>opan-bg.vercel.app/api.html</span>
+                      <span>{model.apiUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')}</span>
                       <ExternalLink className="h-3 w-3" />
                     </a>
                   </div>
@@ -455,20 +455,20 @@ export const ModelCard: React.FC<ModelCardProps> = ({
               rel="noopener noreferrer"
               id={`btn-webtool-${model.id}`}
               className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-purple-600/20 to-indigo-600/20 hover:from-purple-600/30 hover:to-indigo-600/30 border border-purple-500/40 px-3 py-2 text-xs font-bold text-purple-300 transition-all cursor-pointer shadow-sm hover:scale-[1.02]"
-              title="Open AI Background Remover Web Tool"
+              title={`Open ${model.name} Tool`}
             >
-              <span>🎨</span>
-              <span>Open Web Tool</span>
+              <span>{model.id.includes('bg') ? '🎨' : '🚀'}</span>
+              <span>{model.id.includes('omni') ? 'Open AI Suite' : 'Open Web Tool'}</span>
               <ExternalLink className="h-3 w-3 opacity-70" />
             </a>
-            {model.apiUrl && (
+            {model.apiUrl && model.apiUrl !== model.webToolUrl && (
               <a
                 href={model.apiUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 id={`btn-api-docs-${model.id}`}
                 className="inline-flex items-center gap-1.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 px-2.5 py-2 text-xs font-bold text-cyan-300 transition-all cursor-pointer shadow-sm"
-                title="Open Free Vision API Documentation"
+                title={`Open ${model.name} Free API`}
               >
                 <span>⚡</span>
                 <span>Free API</span>
